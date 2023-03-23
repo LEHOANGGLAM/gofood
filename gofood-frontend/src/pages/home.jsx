@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 
 const Home = () => {
@@ -7,7 +9,10 @@ const Home = () => {
   }, []);
 
   return (
-    <>heyy</>
+    <>
+      <Header />
+      <Footer />
+    </>
   );
 };
 
