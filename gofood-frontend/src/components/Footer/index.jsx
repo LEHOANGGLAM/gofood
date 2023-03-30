@@ -1,14 +1,7 @@
 import React from 'react';
-import jwt_decode from "jwt-decode";
 
 const Footer = () => {
-  const token = localStorage.getItem("logto:4mVxVsfPCoYNSkf2SwZ26:idToken") || "";
-  let data = {
-    username: "admin"
-  };
-  if (token) {
-    data = jwt_decode(token); 
-  }
+ 
   return (
     <footer className="footer spad">
       <div className="container">
@@ -21,7 +14,7 @@ const Footer = () => {
               <ul>
                 <li>Address: 1317 Harry Place 28204 NC</li>
                 <li>Phone: 704-768-7449</li>
-                <li>Email: {`${data.username}@ogani.com`}</li>
+                <li>Email: lelam1384@gmail.com</li>
               </ul>
             </div>
           </div>
@@ -72,7 +65,7 @@ const Footer = () => {
               <div className="footer__copyright__text">
                 <p>
                   Copyright &copy;
-                  <script>document.write(new Date().getFullYear());</script>
+                  {new Date().getFullYear()} &ensp;
                   All rights reserved | <b>TK</b>
                 </p>
               </div>

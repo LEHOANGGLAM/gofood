@@ -5,6 +5,13 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import Home from './pages/home';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './assets/css/style.css';
+import './assets/css/slicknav.min.css';
+
+
+import './assets/css//nice-select.css';
+import './assets/css/elegant-icons.css';
+import './assets/css/font-awesome.min.css';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
