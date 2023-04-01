@@ -9,7 +9,6 @@ import './assets/css/slicknav.min.css';
 import './assets/css//nice-select.css';
 import './assets/css/elegant-icons.css';
 import './assets/css/font-awesome.min.css';
-// import './assets/js/owl.carousel.min.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
