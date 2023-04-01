@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "djangoapp.apps.DjangoappConfig"
+    'djangoapp.apps.DjangoappConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -71,14 +72,15 @@ WSGI_APPLICATION = "djangoproject.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 import pymysql
+
 pymysql.install_as_MySQLdb()
 
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'pydb',
+        'NAME': 'gofood',
         'USER': 'root',
-        'PASSWORD': 'Admin@123',
+        'PASSWORD': 'tqhung2001',
         'HOST': ''  # mặc định localhost
     }
 }
@@ -115,3 +117,15 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
+}
+
+
+TEMPLATE_LOADERS = (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )
