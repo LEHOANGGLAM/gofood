@@ -1,10 +1,12 @@
 import { useEffect } from "react";
-import Footer from "../../components/Footer";
-import Header from "../../components/Header";
 import Loading from "../loading";
-import Slider from "./slider";
-import Category from "./category";
-import FeaturedProduct from "./featuredproduct";
+import Slider from "./Slider";
+import Category from "./Category";
+import FeaturedProduct from "./FeaturedProduct";
+import Banner from "./Banner";
+import LatestProduct from "./LatestProduct";
+import Blog from "./Blog";
+import TopStore from "./TopStore";
 
 const Home = () => {
   useEffect(() => {
@@ -14,11 +16,15 @@ const Home = () => {
   return (
     <>
       {/* <Loading /> */}
-      <Header />
+
       <Slider />
       {/* <Category /> */}
       <FeaturedProduct />
-      <Footer />
+
+      <Banner />
+      <TopStore />
+      <LatestProduct />
+      <Blog />
     </>
   );
 };
