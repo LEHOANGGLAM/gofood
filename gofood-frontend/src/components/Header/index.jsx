@@ -174,7 +174,7 @@ const Header = () => {
               <nav class="header__menu">
                 <ul>
                   <li class="active">
-                    <a href="./index.html">Home</a>
+                    <a href="/">Home</a>
                   </li>
                   <li>
                     <a href="./shop-grid.html">Shop</a>
@@ -229,6 +229,7 @@ const Header = () => {
             <i class="fa fa-bars"></i>
           </div>
         </div>
+        <nav class="limiter-menu-desktop container"></nav>
       </header>
       {/* <!-- Header Section End --> */}
     </div>

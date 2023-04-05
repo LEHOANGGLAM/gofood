@@ -1,16 +1,13 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import Breadcrumb from "../../components/Breadcrumb";
+import ProductList from "../../../components/ProductList";
 
 const StoreDetail = () => {
-  const { id } = useParams();
   useEffect(() => {
     document.title = "Store Detail";
   }, []);
 
   return (
     <>
-      <Breadcrumb />
       <section class="product-details spad">
         <div class="container">
           <div class="row">
@@ -112,7 +109,8 @@ const StoreDetail = () => {
                 </ul>
               </div>
             </div>
-            {/* <div class="col-lg-12">
+            <ProductList />
+            <div class="col-lg-12">
               <div class="product__details__tab">
                 <ul class="nav nav-tabs" role="tablist">
                   <li class="nav-item">
@@ -240,7 +238,7 @@ const StoreDetail = () => {
                   </div>
                 </div>
               </div>
-            </div> */}
+            </div>
           </div>
         </div>
       </section>
