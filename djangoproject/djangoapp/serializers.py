@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Food, Category
+from .models import User, Food, Category, Store, Menu
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -18,7 +18,18 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class FoodSerializer(ImageSerializer):
-
     class Meta:
         model = Food
-        field = ['id', 'name', 'category_id', 'created_date', 'price', 'image']
+        fields = ['id', 'name', 'category_id', 'created_date', 'price', 'image']
+
+
+class StoreSerializer(ImageSerializer):
+    class Meta:
+        model = Store
+        fields = ['id', 'name', 'address', 'phone', 'open_time', 'close_time', 'image']
+
+
+class MenuSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Menu
+        fields = ['id', 'name']

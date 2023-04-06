@@ -2,10 +2,12 @@ from rest_framework import routers
 from django.urls import path, include
 from . import views
 
-r = routers.DefaultRouter()
-r.register("categories", views.CategoryViewSet)
-r.register("foods", views.FoodViewSet)
+router = routers.DefaultRouter()
+router.register('categories', views.CategoryViewSet)
+router.register('foods', views.FoodViewSet)
+router.register('stores', views.StoreViewSet)
+router.register('menus', views.MenuViewSet)
 
 urlpatterns = [
-    path('', include(r.urls)),
+    path('', include(router.urls)),
 ]
