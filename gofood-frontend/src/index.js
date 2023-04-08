@@ -5,36 +5,54 @@ import "./assets/css/nice-select.css";
 import "./assets/css/elegant-icons.css";
 import "./assets/css/font-awesome.min.css";
 import "./assets/css/owl.carousel.min.css";
-
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
-import Home from "./pages/home";
-import StoreDetail from "./pages/user-storefront/stores/StoreDetail";
-import Footer from "../src/components/Footer";
-import Header from "../src/components/Header";
-import Products from "./pages/user-storefront/products";
-import Store from "./pages/user-storefront/stores";
-import Dashboard from "./pages/admin";
+import Home from "./pages/UserStore/Home";
+import StoreDetail from "./pages/UserStore/Stores/StoreDetail";
+import Products from "./pages/UserStore/Products";
+import Store from "./layouts/Store";
+import Admin from "./layouts/Admin";
+import Dashboard from "./pages/Admin/Dashboard";
+import NotFound from "./pages/NotFound";
+import Stores from "./pages/UserStore/Stores";
+import Wrapper from "./layouts/Wrapper";
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path="/admin" element={<Dashboard />} />
-      </Routes>
+      <Wrapper>
+        <Routes>
+          {/* UserStore */}
+          <Route
+            path="/"
+            element={
+              <Store />
+            }
+          >
+            <Route index element={<Home />} />
+            <Route path="/stores" element={<Stores />} />
+            <Route path="/stores/:id" element={<StoreDetail />} />
 
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/stores" element={<Store />} />
-        <Route path="/stores/:id" element={<StoreDetail />} />
+            <Route path="/products" element={<Products />} />
+          </Route>
 
-        <Route path="/products" element={<Products />} />
-      </Routes>
-      <Footer />
+          {/* Admin */}
+          <Route
+            path="/admin"
+            element={
+              <Admin />
+            }
+          >
+            <Route index element={<Dashboard />} />
+
+          </Route>
+          <Route path="*" element={<NotFound />}> </Route>
+        </Routes>
+      </Wrapper>
     </BrowserRouter>
   </React.StrictMode>
 );
