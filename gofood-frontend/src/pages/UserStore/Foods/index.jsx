@@ -3,24 +3,30 @@ import FoodService from '../../../services/FoodService';
 import ReactPaginate from 'react-paginate';
 import { useNavigate } from "react-router-dom";
 import FoodCard from '../../../components/FoodCard';
+import CategoryService from '../../../services/CategoryService';
 
-const Products = () => {
+const Foods = () => {
   useEffect(() => {
     document.title = "Foods";
   }, []);
 
   const navigate = useNavigate();
   const [foods, setFoods] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [pageNo, setPageNo] = useState(0);
   const [totalPage, setTotalPage] = useState(1);
   useEffect(() => {
     FoodService.getFoodWithFilter().then((res) => {
       setFoods(res.data.results);
       setTotalPage(() => {
-        if (res.data.count % 12 === 0) return res.data.count / 6;
+        if (res.data.count % 12 === 0) return res.data.count / 12;
         else return Math.floor(res.data.count / 12) + 1;
       });
     });
+
+    CategoryService.getCategories().then((res) => {
+      setCategories(res.data.results);
+    })
   }, [])
 
   const handleFoodClick = (id) => {
@@ -41,12 +47,11 @@ const Products = () => {
                 <div class="sidebar__item">
                   <h4>Food Category</h4>
                   <ul>
-                    <li>
-                      <a href="#">Fresh Meat</a>
-                    </li>
-                    <li>
-                      <a href="#">Vegetables</a>
-                    </li>
+                    {categories.map((category) => {
+                      <li>
+                        <a href="#">{category.name}</a>
+                      </li>
+                    })}               
                   </ul>
                 </div>
                 <div class="sidebar__item">
@@ -159,7 +164,7 @@ const Products = () => {
                   </div>
                 )}
               </div>
-           
+
               <ReactPaginate
                 forcePage={pageNo}
                 previousLabel={<i class="fa fa-long-arrow-left"></i>}
@@ -180,4 +185,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default Foods;
