@@ -52,33 +52,22 @@ const Header = () => {
         <nav class="humberger__menu__nav mobile-menu">
           <ul>
             <li class="active">
-              <a href="./index.html">Home</a>
+              <a href="/">Home</a>
             </li>
             <li>
-              <a href="./shop-grid.html">Shop</a>
+              <a href="/products">Shop</a>
             </li>
             <li>
-              <a href="#">Pages</a>
-              <ul class="header__menu__dropdown">
-                <li>
-                  <a href="./shop-details.html">Shop Details</a>
-                </li>
-                <li>
-                  <a href="./shoping-cart.html">Shoping Cart</a>
-                </li>
-                <li>
-                  <a href="./checkout.html">Check Out</a>
-                </li>
-                <li>
-                  <a href="./blog-details.html">Blog Details</a>
-                </li>
-              </ul>
+              <a href="/stores">Store</a>
             </li>
             <li>
-              <a href="./blog.html">Blog</a>
+              <a href="/blogs">Blog</a>
             </li>
             <li>
-              <a href="./contact.html">Contact</a>
+              <a href="/about">About</a>
+            </li>
+            <li>
+              <a href="/contact">Contact</a>
             </li>
           </ul>
         </nav>
@@ -100,7 +89,7 @@ const Header = () => {
         <div class="humberger__menu__contact">
           <ul>
             <li>
-              <i class="fa fa-envelope"></i> hello@colorlib.com
+              <i class="fa fa-envelope"></i> 1951012061lam@ou.edu.vn
             </li>
             <li>Free Shipping for all Order of $99</li>
           </ul>
@@ -116,7 +105,7 @@ const Header = () => {
                 <div class="header__top__left">
                   <ul>
                     <li>
-                      <i class="fa fa-envelope"></i> hello@colorlib.com
+                      <i class="fa fa-envelope"></i> 1951012061lam@ou.edu.vn
                     </li>
                     <li>Free Shipping for all Order of $99</li>
                   </ul>
@@ -165,7 +154,7 @@ const Header = () => {
           <div class="row">
             <div class="col-lg-3">
               <div class="header__logo">
-                <a href="./index.html">
+                <a href="/">
                   <img src={logo} alt="logo" />
                 </a>
               </div>
@@ -177,30 +166,16 @@ const Header = () => {
                     <a href="/">Home</a>
                   </li>
                   <li>
-                    <a href="./shop-grid.html">Shop</a>
+                    <a href="/products">Food</a>
                   </li>
                   <li>
-                    <a href="#">Pages</a>
-                    <ul class="header__menu__dropdown">
-                      <li>
-                        <a href="./shop-details.html">Shop Details</a>
-                      </li>
-                      <li>
-                        <a href="./shoping-cart.html">Shoping Cart</a>
-                      </li>
-                      <li>
-                        <a href="./checkout.html">Check Out</a>
-                      </li>
-                      <li>
-                        <a href="./blog-details.html">Blog Details</a>
-                      </li>
-                    </ul>
+                    <a href="/stores">Store</a>
                   </li>
                   <li>
-                    <a href="./blog.html">Blog</a>
+                    <a href="/blogs">Blog</a>
                   </li>
                   <li>
-                    <a href="./contact.html">Contact</a>
+                    <a href="/contact">Contact</a>
                   </li>
                 </ul>
               </nav>
