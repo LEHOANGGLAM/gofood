@@ -11,13 +11,14 @@ import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import Home from "./pages/UserStore/Home";
 import StoreDetail from "./pages/UserStore/Stores/StoreDetail";
-import Products from "./pages/UserStore/Products";
+import Products from "./pages/UserStore/Foods";
 import Store from "./layouts/Store";
 import Admin from "./layouts/Admin";
 import Dashboard from "./pages/Admin/Dashboard";
 import NotFound from "./pages/NotFound";
 import Stores from "./pages/UserStore/Stores";
 import Wrapper from "./layouts/Wrapper";
+import Foods from "./pages/UserStore/Foods";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -37,7 +38,7 @@ root.render(
             <Route path="/stores" element={<Stores />} />
             <Route path="/stores/:id" element={<StoreDetail />} />
 
-            <Route path="/products" element={<Products />} />
+            <Route path="/foods" element={<Foods />} />
           </Route>
 
           {/* Admin */}
