@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import StoreService from '../../../../services/StoreService';
-import defaultimg from '../../../../assets/img/default-image.jpg';
 import { useNavigate } from "react-router-dom";
 import StoreCard from '../../../../components/StoreCard';
 
@@ -14,7 +13,7 @@ const LatestStore = () => {
   }, [])
 
   const handleStoreClick = (id) => {
-    navigate(`/stores/${id}}`);
+    navigate(`/stores/${id}`);
   }
 
 

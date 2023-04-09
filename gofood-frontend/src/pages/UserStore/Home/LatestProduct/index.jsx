@@ -15,7 +15,7 @@ const LatestProduct = () => {
   }, [])
 
   const handleFoodClick = (id) => {
-    navigate(`/stores/${id}}`);
+    navigate(`/stores/${id}`);
   }
 
   return (
