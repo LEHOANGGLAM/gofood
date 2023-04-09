@@ -162,19 +162,19 @@ const Header = () => {
             <div class="col-lg-6">
               <nav class="header__menu">
                 <ul>
-                  <li class="active">
+                  <li className={window.location.pathname == "/" ? `active` : ``}>
                     <a href="/">Home</a>
                   </li>
-                  <li>
+                  <li className={window.location.pathname == "/foods" ? `active` : ``}>
                     <a href="/foods">Food</a>
                   </li>
-                  <li>
+                  <li className={window.location.pathname == "/stores" ? `active` : ``}>
                     <a href="/stores">Store</a>
                   </li>
-                  <li>
+                  <li className={window.location.pathname == "/blogs" ? `active` : ``}>
                     <a href="/blogs">Blog</a>
                   </li>
-                  <li>
+                  <li  className={window.location.pathname == "/contact" ? `active` : ``}>
                     <a href="/contact">Contact</a>
                   </li>
                 </ul>

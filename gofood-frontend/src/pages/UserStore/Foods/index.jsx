@@ -10,7 +10,7 @@ import queryString from 'query-string';
 
 const Foods = () => {
   useEffect(() => {
-    document.title = "Foods";
+    document.title = "Food";
   }, []);
 
   const typingTimeOutRef = useRef(null);
@@ -137,8 +137,8 @@ const Foods = () => {
                 </div>
               </div>
               <div className="row">
-                {foods?.map((food, index) => (index <= 8) &&
-                  <div className="col-lg-4 col-md-6 col-sm-6 " style={{ cursor: 'pointer' }} onClick={() => handleFoodClick(food.id)} key={food.id}>
+                {foods?.map((food) => 
+                  <div className="col-lg-4 col-md-6 col-sm-6 " style={{ cursor: 'pointer' }} onClick={() => handleFoodClick(food.id)} key={food.store_id}>
                     <FoodCard food={food} />
                   </div>
                 )}
@@ -150,7 +150,7 @@ const Foods = () => {
                 nextLabel={<i className="fa fa-long-arrow-right"></i>}
                 pageCount={totalPage}
                 onPageChange={handlePageChange}
-                containerClassName={'d-flex flex-row product__pagination gap-2'}
+                containerClassName={'d-flex flex-row product__pagination gap-2 d-flex justify-content-end'}
                 previousLinkClassName={'previousBtn'}
                 nextClassName={'nextBtn'}
                 disabledClassName={'paginationDisabled'}
