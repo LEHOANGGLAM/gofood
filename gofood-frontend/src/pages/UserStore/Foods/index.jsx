@@ -1,20 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import FoodService from '../../../services/FoodService';
 import ReactPaginate from 'react-paginate';
 import { useNavigate } from "react-router-dom";
 import FoodCard from '../../../components/FoodCard';
 import CategoryService from '../../../services/CategoryService';
+import { formatPrice } from '../../../utils/formatPrice';
+import Slider from '@mui/material/Slider';
+import queryString from 'query-string';
 
 const Foods = () => {
   useEffect(() => {
     document.title = "Foods";
   }, []);
 
+  const typingTimeOutRef = useRef(null);
   const navigate = useNavigate();
   const [foods, setFoods] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [price, setPrice] = useState([20000, 55000]);
+  const [categoryId, setCategoryId] = useState(undefined);
   const [pageNo, setPageNo] = useState(0);
   const [totalPage, setTotalPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [productCount, setProductCount] = useState(0);
   useEffect(() => {
     FoodService.getFoodWithFilter().then((res) => {
       setFoods(res.data.results);
@@ -22,144 +30,115 @@ const Foods = () => {
         if (res.data.count % 12 === 0) return res.data.count / 12;
         else return Math.floor(res.data.count / 12) + 1;
       });
+      setProductCount(res.data.count)
     });
 
     CategoryService.getCategories().then((res) => {
-      setCategories(res.data.results);
+      setCategories(res.data);
     })
   }, [])
 
+  useEffect(() => {
+    const params = queryString.stringify({ priceFrom: price[0], priceTo: price[1], keyword: search, categoryId: categoryId, pageNo: pageNo });
+    //console.log(params);
+    FoodService.getFoodWithFilter(params).then((res) => {
+      setFoods(res.data.results);
+      setTotalPage(() => {
+        if (res.data.count % 12 === 0) return res.data.count / 12;
+        else return Math.floor(res.data.count / 12) + 1;
+      });
+      setProductCount(res.data.count)
+    });
+  }, [price, search, pageNo, categoryId])
+
   const handleFoodClick = (id) => {
-    navigate(`/stores/${id}}`);
+    navigate(`/stores/${id}`);
   }
 
   const handlePageChange = (newPage) => {
     setPageNo(newPage);
   }
 
+  const handlePriceChange = (event, newValue) => {
+    setPrice(newValue);
+  };
+
+  const handleClickCateId = (newValue) => {
+    setCategoryId(newValue);
+  };
+
+  const handleSearchChange = (e) => {
+    if (typingTimeOutRef.current) {
+      clearTimeout(typingTimeOutRef.current);
+    }
+    typingTimeOutRef.current = setTimeout(() => {
+      setSearch(e.target.value);
+    }, 500);
+  }
+
   return (
     <>
-      <section class="product spad">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-3 col-md-5">
-              <div class="sidebar">
-                <div class="sidebar__item">
+      <section className="product spad">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-3 col-md-5">
+              <div className="sidebar">
+                <div className="sidebar__item">
                   <h4>Food Category</h4>
                   <ul>
-                    {categories.map((category) => {
-                      <li>
-                        <a href="#">{category.name}</a>
+                    <li key={`all`} onClick={() => handleClickCateId(undefined)} style={{ cursor: 'pointer' }}>
+                      <p className={categoryId == undefined ? `text-danger fw-bold fs-5` : `text-secondary`}>All</p>
+                    </li>
+                    {categories?.map((category) =>
+                      <li key={category.id} onClick={() => handleClickCateId(category.id)} style={{ cursor: 'pointer' }}>
+                        <p className={categoryId == category.id ? `text-danger fw-bold fs-5` : `text-secondary`}>{category.name}</p>
                       </li>
-                    })}               
+                    )}
                   </ul>
                 </div>
-                <div class="sidebar__item">
+                <div className="sidebar__item">
                   <h4>Price</h4>
-                  <div class="price-range-wrap">
-                    <div
-                      class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
-                      data-min="10"
-                      data-max="540"
-                    >
-                      <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
-                      <span
-                        tabindex="0"
-                        class="ui-slider-handle ui-corner-all ui-state-default"
-                      ></span>
-                      <span
-                        tabindex="0"
-                        class="ui-slider-handle ui-corner-all ui-state-default"
-                      ></span>
-                    </div>
-                    <div class="range-slider">
-                      <div class="price-input">
-                        <input type="text" id="minamount" />
-                        <input type="text" id="maxamount" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="sidebar__item sidebar__item__color--option">
-                  <h4>Colors</h4>
-                  <div class="sidebar__item__color sidebar__item__color--white">
-                    <label for="white">
-                      White
-                      <input type="radio" id="white" />
-                    </label>
-                  </div>
-                  <div class="sidebar__item__color sidebar__item__color--gray">
-                    <label for="gray">
-                      Gray
-                      <input type="radio" id="gray" />
-                    </label>
-                  </div>
-                  <div class="sidebar__item__color sidebar__item__color--red">
-                    <label for="red">
-                      Red
-                      <input type="radio" id="red" />
-                    </label>
-                  </div>
-                </div>
-                <div class="sidebar__item">
-                  <h4>Popular Size</h4>
-                  <div class="sidebar__item__size">
-                    <label for="large">
-                      Large
-                      <input type="radio" id="large" />
-                    </label>
-                  </div>
-                  <div class="sidebar__item__size">
-                    <label for="medium">
-                      Medium
-                      <input type="radio" id="medium" />
-                    </label>
-                  </div>
-                  <div class="sidebar__item__size">
-                    <label for="small">
-                      Small
-                      <input type="radio" id="small" />
-                    </label>
-                  </div>
-                  <div class="sidebar__item__size">
-                    <label for="tiny">
-                      Tiny
-                      <input type="radio" id="tiny" />
-                    </label>
+                  <div className="price-range-wrap">
+                    <Slider
+                      value={price}
+                      onChange={handlePriceChange}
+                      valueLabelDisplay="auto"
+                      max={500000}
+                      step={1000}
+                    />
+                    <p className='text-danger fw-bold'>{formatPrice(price[0])} - {formatPrice(price[1])}</p>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-lg-9 col-md-7">
-              <div class="filter__item">
-                <div class="row">
-                  <div class="col-lg-4 col-md-5">
-                    <div class="filter__sort">
-                      <span>Sort By</span>
-                      <select>
-                        <option value="0">Default</option>
-                        <option value="0">Default</option>
-                      </select>
+            <div className="col-lg-9 col-md-7">
+              <div className="filter__item">
+                <div className="row">
+                  <div className="col-lg-6 col-md-5">
+                    <div className="filter__sort d-flex flex-row">
+                      <span className='mx-2 mt-2 text-black'>Search</span>
+                      <input type="search" id="form1" class="form-control" placeholder={`food's name or store's name`} onChange={handleSearchChange} />
                     </div>
+
                   </div>
-                  <div class="col-lg-4 col-md-4">
-                    <div class="filter__found">
+                  <div className="col-lg-3 col-md-4">
+                    <div className="filter__found mt-2">
                       <h6>
-                        <span>16</span> Products found
+                        <span>{productCount}</span> Products found
                       </h6>
                     </div>
                   </div>
-                  <div class="col-lg-4 col-md-3">
-                    <div class="filter__option">
-                      <span class="icon_grid-2x2"></span>
-                      <span class="icon_ul"></span>
+                  <div className="col-lg-3 col-md-3">
+                    <div className="filter__option mt-2">
+                      <span className="icon_grid-2x2"></span>
+                      <span className="icon_ul"></span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div className="row">
                 {foods?.map((food, index) => (index <= 8) &&
-                  <div class="col-lg-4 col-md-6 col-sm-6 " style={{ cursor: 'pointer' }} onClick={() => handleFoodClick(food.id)}>
+                  <div className="col-lg-4 col-md-6 col-sm-6 " style={{ cursor: 'pointer' }} onClick={() => handleFoodClick(food.id)} key={food.id}>
                     <FoodCard food={food} />
                   </div>
                 )}
@@ -167,8 +146,8 @@ const Foods = () => {
 
               <ReactPaginate
                 forcePage={pageNo}
-                previousLabel={<i class="fa fa-long-arrow-left"></i>}
-                nextLabel={<i class="fa fa-long-arrow-right"></i>}
+                previousLabel={<i className="fa fa-long-arrow-left"></i>}
+                nextLabel={<i className="fa fa-long-arrow-right"></i>}
                 pageCount={totalPage}
                 onPageChange={handlePageChange}
                 containerClassName={'d-flex flex-row product__pagination gap-2'}
