@@ -5,12 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3f40be4-888c-4867-867a-a41e4dc580b8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djangoproject/djangoapp/migrations/0005_food_store_rating_like.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/djangoproject/djangoapp/paginators.py" beforeDir="false" afterPath="$PROJECT_DIR$/djangoproject/djangoapp/paginators.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gofood-frontend/src/components/Header/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/gofood-frontend/src/components/Header/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gofood-frontend/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/gofood-frontend/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gofood-frontend/src/pages/UserStore/Products/index.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/djangoproject/djangoapp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/djangoproject/djangoapp/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/djangoproject/djangoapp/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/djangoproject/djangoapp/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/djangoproject/djangoapp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/djangoproject/djangoapp/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/djangoproject/djangoproject/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/djangoproject/djangoproject/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/djangoproject/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/djangoproject/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,16 +43,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;handle-food-list-page&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/MyFolder/gofood&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "hungv2",
+    "last_opened_file_path": "C:/MyFolder/gofood",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\Study\Django\BTL\djangoproject\djangoproject" />

@@ -18,18 +18,27 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class FoodSerializer(ImageSerializer):
+    store_id = serializers.IntegerField()
+    category_id = serializers.IntegerField()
+    menu_id = serializers.IntegerField()
+    image = serializers.ImageField()
+
     class Meta:
         model = Food
-        fields = ['id', 'name', 'category_id', 'created_date', 'price', 'image']
+        fields = ['id', 'name', 'category_id', 'menu_id', 'store_id', 'created_date', 'price', 'image']
 
 
 class StoreSerializer(ImageSerializer):
+    image = serializers.ImageField()
+
     class Meta:
         model = Store
         fields = ['id', 'name', 'address', 'phone', 'open_time', 'close_time', 'image']
 
 
 class MenuSerializer(serializers.ModelSerializer):
+    store_id = serializers.IntegerField()
+
     class Meta:
         model = Menu
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'store_id']

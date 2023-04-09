@@ -63,6 +63,8 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 AUTH_USER_MODEL = 'djangoapp.User'
 ROOT_URLCONF = "djangoproject.urls"
 
+MEDIA_ROOT = '%s/djangoapp/static/' % BASE_DIR
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -92,7 +94,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'gofood',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'tqhung2001',
         'HOST': ''  # mặc định localhost
     }
 }
@@ -131,8 +133,3 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CKEDITOR_UPLOAD_PATH = "ckeditor/djangoapp/"
-
-
-
-
-

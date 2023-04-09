@@ -50,12 +50,30 @@ class Food(BaseModel):
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     menu = models.ForeignKey(Menu, on_delete=models.PROTECT, null=True)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, null=True)
     price = models.IntegerField()
     image = models.ImageField(upload_to='foods/%Y/%m', null=True)
     is_stock = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
+
+
+class ActionBase(BaseModel):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('store', 'user')
+        abstract = True
+
+
+class Like(ActionBase):
+    liked = models.BooleanField(default=True)
+
+
+class Rating(ActionBase):
+    rate = models.SmallIntegerField(default=0)
 
 
 
