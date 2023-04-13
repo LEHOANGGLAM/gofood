@@ -4,6 +4,19 @@ import { useNavigate } from "react-router-dom";
 import StoreCard from '../../../components/StoreCard';
 import ReactPaginate from 'react-paginate';
 import queryString from 'query-string';
+import BreadcrumbComponent from '../../../components/Breadcrumb';
+
+
+const crumb = [
+  {
+    pageName: 'Home',
+    url: '/',
+  },
+  {
+    pageName: 'Find Store',
+    url: '#',
+  },
+];
 
 const Stores = () => {
   useEffect(() => {
@@ -49,8 +62,10 @@ const Stores = () => {
 
   return (
     <>
-      <section class="product spad">
+    
+      <section class="product spad" style={{marginTop: -50}}>
         <div class="container">
+        <BreadcrumbComponent props={crumb} />
           <div class="row">
             <div class="col-lg-12 col-md-12">
               <div className="filter__item">

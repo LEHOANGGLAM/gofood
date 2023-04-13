@@ -1,32 +1,16 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
+import Breadcrumb from 'react-bootstrap/Breadcrumb';
 
-Breadcrumb.propTypes = {
-  title: PropTypes.any,
-};
-
-Breadcrumb.defaultProps = { title: null };
-
-function Breadcrumb(props) {
-  const { title } = props;
+export default function BreadcrumbComponent({ props }) {
 
   return (
-    <section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 text-center">
-            <div class="breadcrumb__text">
-              <h2>GoFood</h2>
-              <div class="breadcrumb__option">
-                <a href="/">Home</a>
-                <span>{title}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <Breadcrumb className="">
+      {props.map((page, index) => (
+        <Breadcrumb.Item href={page.url} key={index} active={index === props.length - 1}>
+          {page.pageName}
+        </Breadcrumb.Item>
+      ))}
+    </Breadcrumb>
   );
 }
 
-export default Breadcrumb;
