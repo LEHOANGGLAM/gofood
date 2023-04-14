@@ -31,12 +31,12 @@ const MyStore = () => {
                                 <td>test@gmail.com</td>
                                 <td>01-10-2021</td>
                                 <td>
-                                    <span class="status completed">Completed</span>
+                                    <span class="status success">Approved</span>
                                 </td>
                                 <td>
                                     {/* <button type="button" class="btn btn-outline-success btn-sm mx-1"> <i class="bi bi-check-circle-fill mx-1"></i>Approve</button> */}
                                     <button type="button" class="btn btn-outline-primary btn-sm mx-1" > <i class="bi bi-eye-fill me-1"></i>View</button>
-                                    <button type="button" class="btn btn-outline-danger btn-sm"> <i class="bi bi-trash-fill me-1"></i>Delete</button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm"> <i class="bi bi-lock-fill"></i>Lock</button>
                                 </td>
                             </tr>
 

@@ -39,8 +39,7 @@ const Foods = () => {
   }, [])
 
   useEffect(() => {
-    const params = queryString.stringify({ priceFrom: price[0], priceTo: price[1], keyword: search, categoryId: categoryId, pageNo: pageNo });
-    //console.log(params);
+    const params = queryString.stringify({ priceFrom: price[0], priceTo: price[1], keyword: search, categoryId: categoryId, page: pageNo });
     FoodService.getFoodWithFilter(params).then((res) => {
       setFoods(res.data.results);
       setTotalPage(() => {
@@ -55,8 +54,8 @@ const Foods = () => {
     navigate(`/stores/${id}`);
   }
 
-  const handlePageChange = (newPage) => {
-    setPageNo(newPage);
+  const handlePageChange = ({ selected }) => {
+    setPageNo(selected + 1);
   }
 
   const handlePriceChange = (event, newValue) => {
@@ -137,8 +136,8 @@ const Foods = () => {
                 </div>
               </div>
               <div className="row">
-                {foods?.map((food) => 
-                  <div className="col-lg-4 col-md-6 col-sm-6 " style={{ cursor: 'pointer' }} onClick={() => handleFoodClick(food.id)} key={food.store_id}>
+                {foods?.map((food, index) =>
+                  <div className="col-lg-4 col-md-6 col-sm-6 " style={{ cursor: 'pointer' }} onClick={() => handleFoodClick(food.id)} key={index}>
                     <FoodCard food={food} />
                   </div>
                 )}

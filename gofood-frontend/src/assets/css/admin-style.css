@@ -18,6 +18,7 @@ li {
 	--poppins: 'Poppins', sans-serif;
 	--lato: 'Lato', sans-serif;
 
+	--green: #28a745;
 	--light: #F9F9F9;
 	--blue: #3C91E6;
 	--light-blue: #CFE8FF;
@@ -474,6 +475,9 @@ body.dark {
 	color: var(--light);
 	border-radius: 20px;
 	font-weight: 700;
+}
+#content main .table-data .order table tr td .status.success {
+	background: var(--green);
 }
 #content main .table-data .order table tr td .status.completed {
 	background: var(--blue);
