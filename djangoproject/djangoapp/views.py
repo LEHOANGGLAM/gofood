@@ -1,6 +1,7 @@
 from rest_framework import viewsets, generics, parsers, permissions, status
 from rest_framework.decorators import action
 from rest_framework.views import Response
+from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import render
 from .models import Food, User, Category, Store, Menu
 from .serializers import (FoodSerializer, CategorySerializer, StoreSerializer, MenuSerializer)
@@ -33,6 +34,11 @@ class MenuViewSet(viewsets.ViewSet, generics.ListAPIView,
         serializer.save(store=your_foreign_key)
 
 
+    @action(methods=['get'], detail=True, url_path='foods')
+    def foods(self, request, pk):
+        c = self.get_object()
+        foods = c.food_set.filter(active=True)
+        return Response(MenuSerializer(foods, many=True, context={'request': request}).data)
 
 class StoreViewSet(viewsets.ViewSet, generics.ListAPIView,
                    generics.CreateAPIView,
@@ -55,7 +61,27 @@ class StoreViewSet(viewsets.ViewSet, generics.ListAPIView,
         else:
             return Response({'error': 'Image is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
+    def list(self, request, *args, **kwargs):
+        keyword = request.GET.get('keyword', '')
+        page = request.GET.get('pageNo', 1)
 
+        queryset = self.queryset.filter(name__icontains=keyword)
+        page = self.paginate_queryset(queryset)
+
+        serializer = self.serializer_class(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+    @action(methods=['get'], detail=True, url_path='menus')
+    def menus(self, request, pk):
+        c = self.get_object()
+        menus = c.menu_set.filter(active=True)
+        return Response(MenuSerializer(menus, many=True, context={'request': request}).data)
+
+    @action(methods=['get'], detail=True, url_path='foods')
+    def foods(self, request, pk):
+        c = self.get_object()
+        foods = c.food_set.filter(active=True)
+        return Response(MenuSerializer(foods, many=True, context={'request': request}).data)
 
 
 class FoodViewSet(viewsets.ViewSet, generics.ListAPIView,
@@ -67,20 +93,33 @@ class FoodViewSet(viewsets.ViewSet, generics.ListAPIView,
     serializer_class = FoodSerializer
     pagination_class = FoodPaginator
 
-    def filter_queryset(self, queryset):
-        q = self.request.query_params.get("q")
-        if q:
-            queryset = queryset.filter(name__icontains=q)
+    def list(self, request, *args, **kwargs):
+        keyword = request.GET.get('keyword', '')
+        page = request.GET.get('pageNo', 1)
+        price_from = request.GET.get('priceFrom', None)
+        price_to = request.GET.get('priceTo', None)
+        category_id = request.GET.get('categoryId', None)
 
-        cate_id = self.request.query_params.get('category_id')
-        if cate_id:
-            queryset = queryset.filter(category_id=cate_id)
+        queryset = self.queryset.filter(name__icontains=keyword)
 
-        return queryset
+        if price_from and price_to:
+            queryset = queryset.filter(price__range=(price_from, price_to))
+        elif price_from:
+            queryset = queryset.filter(price__gte=price_from)
+        elif price_to:
+            queryset = queryset.filter(price__lte=price_to)
+
+        if category_id is not None:
+            queryset = queryset.filter(category_id=category_id)
+
+        page = self.paginate_queryset(queryset)
+
+        serializer = self.serializer_class(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def perform_create(self, serializer):
         store_id = serializer.validated_data.pop('store_id')
-        store= Store.objects.get(id=store_id)
+        store = Store.objects.get(id=store_id)
         category_id = serializer.validated_data.pop('category_id')
         category = Category.objects.get(id=category_id)
         menu_id = serializer.validated_data.pop('menu_id')
@@ -100,4 +139,3 @@ class FoodViewSet(viewsets.ViewSet, generics.ListAPIView,
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response({'error': 'Image is required.'}, status=status.HTTP_400_BAD_REQUEST)
-
