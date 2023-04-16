@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+CKEDITOR_UPLOAD_PATH = "images/djangoapp/"
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -61,6 +63,7 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 ]
 
 AUTH_USER_MODEL = 'djangoapp.User'
+
 ROOT_URLCONF = "djangoproject.urls"
 
 MEDIA_ROOT = '%s/djangoapp/static/' % BASE_DIR
@@ -125,8 +128,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
-
+STATIC_URL = '/static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
