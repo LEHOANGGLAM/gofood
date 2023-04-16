@@ -6,6 +6,10 @@ class StoreService {
         //console.log(`${API_BASE_URL}?${params}`);
         return axios.get(`${API_BASE_URL}?${params}`);
     }
+
+    getStoreById(id) {
+        return axios.get(`${API_BASE_URL}${id}/`);
+    }
 }
 
 export default new StoreService();

@@ -19,12 +19,15 @@ const Foods = () => {
   const [categories, setCategories] = useState([]);
   const [price, setPrice] = useState([20000, 55000]);
   const [categoryId, setCategoryId] = useState(undefined);
-  const [pageNo, setPageNo] = useState(0);
+  const [pageNo, setPageNo] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState('');
   const [productCount, setProductCount] = useState(0);
-  useEffect(() => {
-    FoodService.getFoodWithFilter().then((res) => {
+
+  const getFoods = async () => {
+    // priceFrom: price[0], priceTo: price[1],
+    const params = queryString.stringify({ keyword: search, categoryId: categoryId, page: pageNo });
+    await FoodService.getFoodWithFilter(params).then((res) => {
       setFoods(res.data.results);
       setTotalPage(() => {
         if (res.data.count % 12 === 0) return res.data.count / 12;
@@ -32,6 +35,11 @@ const Foods = () => {
       });
       setProductCount(res.data.count)
     });
+    
+  }
+
+  useEffect(() => {
+    getFoods();
 
     CategoryService.getCategories().then((res) => {
       setCategories(res.data);
@@ -39,15 +47,8 @@ const Foods = () => {
   }, [])
 
   useEffect(() => {
-    const params = queryString.stringify({ priceFrom: price[0], priceTo: price[1], keyword: search, categoryId: categoryId, page: pageNo });
-    FoodService.getFoodWithFilter(params).then((res) => {
-      setFoods(res.data.results);
-      setTotalPage(() => {
-        if (res.data.count % 12 === 0) return res.data.count / 12;
-        else return Math.floor(res.data.count / 12) + 1;
-      });
-      setProductCount(res.data.count)
-    });
+    getFoods();
+    document.documentElement.scrollTo(0, 0);
   }, [price, search, pageNo, categoryId])
 
   const handleFoodClick = (id) => {
@@ -60,9 +61,11 @@ const Foods = () => {
 
   const handlePriceChange = (event, newValue) => {
     setPrice(newValue);
+    setPageNo(1);
   };
 
   const handleClickCateId = (newValue) => {
+    setPageNo(1);
     setCategoryId(newValue);
   };
 
@@ -72,6 +75,7 @@ const Foods = () => {
     }
     typingTimeOutRef.current = setTimeout(() => {
       setSearch(e.target.value);
+      setPageNo(1);
     }, 500);
   }
 
@@ -137,7 +141,7 @@ const Foods = () => {
               </div>
               <div className="row">
                 {foods?.map((food, index) =>
-                  <div className="col-lg-4 col-md-6 col-sm-6 " style={{ cursor: 'pointer' }} onClick={() => handleFoodClick(food.id)} key={index}>
+                  <div className="col-lg-4 col-md-6 col-sm-6 " style={{ cursor: 'pointer' }} onClick={() => handleFoodClick(food.store_id)} key={index}>
                     <FoodCard food={food} />
                   </div>
                 )}
