@@ -26,7 +26,7 @@ const Stores = () => {
   const typingTimeOutRef = useRef(null);
   const navigate = useNavigate();
   const [stores, setStores] = useState([]);
-  const [pageNo, setPageNo] = useState(0);
+  const [pageNo, setPageNo] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [storeCount, setStoreCount] = useState(0);
   const [search, setSearch] = useState('');
@@ -56,9 +56,11 @@ const Stores = () => {
     navigate(`/stores/${id}`);
   }
 
-  const handlePageChange = (newPage) => {
-    setPageNo(newPage);
+  const handlePageChange = ({selected}) => {
+    setPageNo(selected);
   }
+
+  
 
   return (
     <>

@@ -51,6 +51,8 @@ root.render(
           >
             <Route index element={<Dashboard />} />
             <Route  path="/admin/stores" element={<MyStore />} />
+            <Route path="/admin/stores/:id" element={<StoreDetail />} />
+
           </Route>
           <Route path="*" element={<NotFound />}> </Route>
         </Routes>

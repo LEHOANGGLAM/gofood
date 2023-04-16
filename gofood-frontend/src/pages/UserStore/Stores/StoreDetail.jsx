@@ -1,10 +1,45 @@
-import { useEffect } from "react";
-import LatestProduct from "../Home/LatestProduct";
+import React, { useEffect, useState } from "react";
+import LatestStore from "../Home/LatestStore";
+import Banner from "../Home/Banner";
+import StoreService from "../../../services/StoreService";
+import { useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
+import img from "../../../assets/img/default-image.jpg";
+import moment from 'moment';
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 
-const StoreDetail = () => {
+const StoreDetail = (props) => {
   useEffect(() => {
     document.title = "Store Detail";
   }, []);
+
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [store, setStore] = useState({});
+  const [value, setValue] = useState('1');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const getStore = async (id) => {
+    await StoreService.getStoreById(id).then((res) => {
+      setStore(res.data)
+    },
+      (err) => {
+        if (err.response.status === 404)
+          navigate(`/notfound/`);
+      }
+    )
+  }
+
+  useEffect(() => {
+    getStore(id);
+  }, [])
 
   return (
     <>
@@ -16,37 +51,27 @@ const StoreDetail = () => {
                 <div class="product__details__pic__item">
                   <img
                     class="product__details__pic__item--large"
-                    src="img/product/details/product-details-1.jpg"
-                    alt=""
+                    src={store.image ?? img}
+                    alt="store image"
                   />
                 </div>
-                <div class="product__details__pic__slider owl-carousel">
+                {/* <div class="product__details__pic__slider owl-carousel">
                   <img
                     data-imgbigurl="img/product/details/product-details-2.jpg"
-                    src="img/product/details/thumb-1.jpg"
+                    src={img}
                     alt=""
                   />
                   <img
                     data-imgbigurl="img/product/details/product-details-3.jpg"
-                    src="img/product/details/thumb-2.jpg"
+                    src={img}
                     alt=""
                   />
-                  <img
-                    data-imgbigurl="img/product/details/product-details-5.jpg"
-                    src="img/product/details/thumb-3.jpg"
-                    alt=""
-                  />
-                  <img
-                    data-imgbigurl="img/product/details/product-details-4.jpg"
-                    src="img/product/details/thumb-4.jpg"
-                    alt=""
-                  />
-                </div>
+                </div> */}
               </div>
             </div>
             <div class="col-lg-6 col-md-6">
               <div class="product__details__text">
-                <h3>Vetgetable’s Package</h3>
+                <h3>{store.name}</h3>
                 <div class="product__details__rating">
                   <i class="fa fa-star"></i>
                   <i class="fa fa-star"></i>
@@ -55,39 +80,29 @@ const StoreDetail = () => {
                   <i class="fa fa-star-half-o"></i>
                   <span>(18 reviews)</span>
                 </div>
-                <div class="product__details__price">$50.00</div>
+                {/* <div class="product__details__price">test</div> */}
                 <p>
-                  Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                  Vestibulum ac diam sit amet quam vehicula elementum sed sit
-                  amet dui. Sed porttitor lectus nibh. Vestibulum ac diam sit
-                  amet quam vehicula elementum sed sit amet dui. Proin eget
-                  tortor risus.
+                  {store.description ?? 'Mauris blandit aliquet elit, eget tincidunt nibh pulvinar aVestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed porttitor lectus nibh. Vestibulum ac diam sitamet quam vehicula elementum sed sit amet dui. Proin egettortor risus.'}
                 </p>
                 <div class="product__details__quantity">
-                  <div class="quantity">
-                    <div class="pro-qty">
-                      <input type="text" value="1" />
-                    </div>
-                  </div>
+                  <a href="#" class="heart-icon">
+                    View More
+                  </a>
                 </div>
                 <a href="#" class="primary-btn">
-                  ADD TO CARD
+                  Follow
+                  <span class="icon_heart_alt ms-2"></span>
                 </a>
-                <a href="#" class="heart-icon">
-                  <span class="icon_heart_alt"></span>
-                </a>
+
                 <ul>
                   <li>
-                    <b>Availability</b> <span>In Stock</span>
+                    <b>Availability</b> <span>{moment(store.open_time, 'HH:mm:ss').format('H:mm')} - {moment(store.close_time, 'HH:mm:ss').format('H:mm')}</span>
                   </li>
                   <li>
                     <b>Shipping</b>{" "}
                     <span>
-                      01 day shipping. <samp>Free pickup today</samp>
+                      20 minutes shipping. <samp>Free pickup today</samp>
                     </span>
-                  </li>
-                  <li>
-                    <b>Weight</b> <span>0.5 kg</span>
                   </li>
                   <li>
                     <b>Share on</b>
@@ -109,137 +124,23 @@ const StoreDetail = () => {
                 </ul>
               </div>
             </div>
-     
-            <div class="col-lg-12">
-              <div class="product__details__tab">
-                <ul class="nav nav-tabs" role="tablist">
-                  <li class="nav-item">
-                    <a
-                      class="nav-link active"
-                      data-toggle="tab"
-                      href="#tabs-1"
-                      role="tab"
-                      aria-selected="true"
-                    >
-                      Description
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      data-toggle="tab"
-                      href="#tabs-2"
-                      role="tab"
-                      aria-selected="false"
-                    >
-                      Information
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      data-toggle="tab"
-                      href="#tabs-3"
-                      role="tab"
-                      aria-selected="false"
-                    >
-                      Reviews <span>(1)</span>
-                    </a>
-                  </li>
-                </ul>
-                <div class="tab-content">
-                  <div class="tab-pane active" id="tabs-1" role="tabpanel">
-                    <div class="product__details__tab__desc">
-                      <h6>Products Infomation</h6>
-                      <p>
-                        Vestibulum ac diam sit amet quam vehicula elementum sed
-                        sit amet dui. Pellentesque in ipsum id orci porta
-                        dapibus. Proin eget tortor risus. Vivamus suscipit
-                        tortor eget felis porttitor volutpat. Vestibulum ac diam
-                        sit amet quam vehicula elementum sed sit amet dui. Donec
-                        rutrum congue leo eget malesuada. Vivamus suscipit
-                        tortor eget felis porttitor volutpat. Curabitur arcu
-                        erat, accumsan id imperdiet et, porttitor at sem.
-                        Praesent sapien massa, convallis a pellentesque nec,
-                        egestas non nisi. Vestibulum ac diam sit amet quam
-                        vehicula elementum sed sit amet dui. Vestibulum ante
-                        ipsum primis in faucibus orci luctus et ultrices posuere
-                        cubilia Curae; Donec velit neque, auctor sit amet
-                        aliquam vel, ullamcorper sit amet ligula. Proin eget
-                        tortor risus.
-                      </p>
-                      <p>
-                        Praesent sapien massa, convallis a pellentesque nec,
-                        egestas non nisi. Lorem ipsum dolor sit amet,
-                        consectetur adipiscing elit. Mauris blandit aliquet
-                        elit, eget tincidunt nibh pulvinar a. Cras ultricies
-                        ligula sed magna dictum porta. Cras ultricies ligula sed
-                        magna dictum porta. Sed porttitor lectus nibh. Mauris
-                        blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                        Vestibulum ac diam sit amet quam vehicula elementum sed
-                        sit amet dui. Sed porttitor lectus nibh. Vestibulum ac
-                        diam sit amet quam vehicula elementum sed sit amet dui.
-                        Proin eget tortor risus.
-                      </p>
-                    </div>
-                  </div>
-                  <div class="tab-pane" id="tabs-2" role="tabpanel">
-                    <div class="product__details__tab__desc">
-                      <h6>Products Infomation</h6>
-                      <p>
-                        Vestibulum ac diam sit amet quam vehicula elementum sed
-                        sit amet dui. Pellentesque in ipsum id orci porta
-                        dapibus. Proin eget tortor risus. Vivamus suscipit
-                        tortor eget felis porttitor volutpat. Vestibulum ac diam
-                        sit amet quam vehicula elementum sed sit amet dui. Donec
-                        rutrum congue leo eget malesuada. Vivamus suscipit
-                        tortor eget felis porttitor volutpat. Curabitur arcu
-                        erat, accumsan id imperdiet et, porttitor at sem.
-                        Praesent sapien massa, convallis a pellentesque nec,
-                        egestas non nisi. Vestibulum ac diam sit amet quam
-                        vehicula elementum sed sit amet dui. Vestibulum ante
-                        ipsum primis in faucibus orci luctus et ultrices posuere
-                        cubilia Curae; Donec velit neque, auctor sit amet
-                        aliquam vel, ullamcorper sit amet ligula. Proin eget
-                        tortor risus.
-                      </p>
-                      <p>
-                        Praesent sapien massa, convallis a pellentesque nec,
-                        egestas non nisi. Lorem ipsum dolor sit amet,
-                        consectetur adipiscing elit. Mauris blandit aliquet
-                        elit, eget tincidunt nibh pulvinar a. Cras ultricies
-                        ligula sed magna dictum porta. Cras ultricies ligula sed
-                        magna dictum porta. Sed porttitor lectus nibh. Mauris
-                        blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                      </p>
-                    </div>
-                  </div>
-                  <div class="tab-pane" id="tabs-3" role="tabpanel">
-                    <div class="product__details__tab__desc">
-                      <h6>Products Infomation</h6>
-                      <p>
-                        Vestibulum ac diam sit amet quam vehicula elementum sed
-                        sit amet dui. Pellentesque in ipsum id orci porta
-                        dapibus. Proin eget tortor risus. Vivamus suscipit
-                        tortor eget felis porttitor volutpat. Vestibulum ac diam
-                        sit amet quam vehicula elementum sed sit amet dui. Donec
-                        rutrum congue leo eget malesuada. Vivamus suscipit
-                        tortor eget felis porttitor volutpat. Curabitur arcu
-                        erat, accumsan id imperdiet et, porttitor at sem.
-                        Praesent sapien massa, convallis a pellentesque nec,
-                        egestas non nisi. Vestibulum ac diam sit amet quam
-                        vehicula elementum sed sit amet dui. Vestibulum ante
-                        ipsum primis in faucibus orci luctus et ultrices posuere
-                        cubilia Curae; Donec velit neque, auctor sit amet
-                        aliquam vel, ullamcorper sit amet ligula. Proin eget
-                        tortor risus.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <LatestProduct />
+
+            <TabContext value={value} >
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <TabList onChange={handleChange} aria-label="lab API tabs example" centered>
+                  <Tab label="Item One" value="1" />
+                  <Tab label="Item Two" value="2" />
+                  <Tab label="Item Three" value="3" />
+                </TabList>
+              </Box>
+              <TabPanel value="1">Item One</TabPanel>
+              <TabPanel value="2">Item Two</TabPanel>
+              <TabPanel value="3">Item Three</TabPanel>
+            </TabContext>
+
+            <Banner />
+            <LatestStore title={'Other Store'}/>
+
           </div>
         </div>
       </section>

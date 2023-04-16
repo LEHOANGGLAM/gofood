@@ -29,8 +29,8 @@ const LatestProduct = () => {
           </div>
         </div>
         <div class="row featured__filter">
-          {foods?.map((food, index) => (index <= 8) &&
-            <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat"  style={{ cursor: 'pointer'}} onClick={()=>handleFoodClick(food.store_id)}>
+          {foods?.map((food, index) => (index < 8) &&
+            <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat"  style={{ cursor: 'pointer'}} onClick={()=>handleFoodClick(food.store_id)} key={food.id}>
               <FoodCard food={food}/>
             </div>
           )}
