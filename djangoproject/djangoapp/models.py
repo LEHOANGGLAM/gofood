@@ -31,6 +31,8 @@ class Store(BaseModel):
     open_time = models.TimeField()
     close_time = models.TimeField()
     image = models.ImageField(upload_to='stores/%Y/%m', null=True)
+    is_active = models.BooleanField(default=False)
+    email = models.EmailField(unique=True, null=True, blank=True, default=None)
 
     def __str__(self):
         return self.name

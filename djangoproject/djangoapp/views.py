@@ -81,7 +81,7 @@ class StoreViewSet(viewsets.ViewSet, generics.ListAPIView,
     def foods(self, request, pk):
         c = self.get_object()
         foods = c.food_set.filter(active=True)
-        return Response(MenuSerializer(foods, many=True, context={'request': request}).data)
+        return Response(FoodSerializer(foods, many=True, context={'request': request}).data)
 
 
 class FoodViewSet(viewsets.ViewSet, generics.ListAPIView,
@@ -128,14 +128,4 @@ class FoodViewSet(viewsets.ViewSet, generics.ListAPIView,
         serializer.save(category=category)
         serializer.save(menu=menu)
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
 
-        image = serializer.validated_data.get('image', None)
-        if image:
-            instance = serializer.save(image=image)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        else:
-            return Response({'error': 'Image is required.'}, status=status.HTTP_400_BAD_REQUEST)
