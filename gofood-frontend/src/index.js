@@ -19,7 +19,8 @@ import NotFound from "./pages/NotFound";
 import Stores from "./pages/UserStore/Stores";
 import Wrapper from "./layouts/Wrapper";
 import Foods from "./pages/UserStore/Foods";
-import MyStore from "./pages/Admin/MyStore";
+import AdminStoreList from "./pages/Admin/AdminStoreList";
+import AdminStoreDetail from "./pages/Admin/AdminStoreDetail";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -50,8 +51,19 @@ root.render(
             }
           >
             <Route index element={<Dashboard />} />
-            <Route  path="/admin/stores" element={<MyStore />} />
-            <Route path="/admin/stores/:id" element={<StoreDetail />} />
+            <Route path="/admin/stores" element={<AdminStoreList />} />
+            <Route path="/admin/stores/:id" element={<AdminStoreDetail />} />
+
+          </Route>
+
+          {/* Store-Admin */}
+          <Route
+            path="/store-admin"
+            element={
+              <Admin />
+            }
+          >
+            <Route index element={<Dashboard />} />
 
           </Route>
           <Route path="*" element={<NotFound />}> </Route>

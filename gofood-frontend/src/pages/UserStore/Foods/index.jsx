@@ -17,7 +17,7 @@ const Foods = () => {
   const navigate = useNavigate();
   const [foods, setFoods] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [price, setPrice] = useState([20000, 55000]);
+  const [price, setPrice] = useState([0, 200000]);
   const [categoryId, setCategoryId] = useState(undefined);
   const [pageNo, setPageNo] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -26,7 +26,7 @@ const Foods = () => {
 
   const getFoods = async () => {
     // priceFrom: price[0], priceTo: price[1],
-    const params = queryString.stringify({ keyword: search, categoryId: categoryId, page: pageNo });
+    const params = queryString.stringify({ priceFrom: price[0], priceTo: price[1], keyword: search, categoryId: categoryId, page: pageNo });
     await FoodService.getFoodWithFilter(params).then((res) => {
       setFoods(res.data.results);
       setTotalPage(() => {
@@ -35,7 +35,7 @@ const Foods = () => {
       });
       setProductCount(res.data.count)
     });
-    
+
   }
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const Foods = () => {
 
   useEffect(() => {
     getFoods();
-    document.documentElement.scrollTo(0, 0);
+    document.documentElement.scrollTo(130, 130);
   }, [price, search, pageNo, categoryId])
 
   const handleFoodClick = (id) => {

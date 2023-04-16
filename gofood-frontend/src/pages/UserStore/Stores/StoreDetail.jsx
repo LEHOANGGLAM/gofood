@@ -11,6 +11,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import FoodCardv2 from '../../../components/FoodCard/FoodCardv2';
 
 const StoreDetail = (props) => {
   useEffect(() => {
@@ -21,6 +22,8 @@ const StoreDetail = (props) => {
   const { id } = useParams();
   const [store, setStore] = useState({});
   const [value, setValue] = useState('1');
+  const [foods, setFoods] = useState([]);
+  const [menus, setMenus] = useState([]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -35,6 +38,14 @@ const StoreDetail = (props) => {
           navigate(`/notfound/`);
       }
     )
+
+    await StoreService.getFoodByStoreId(id).then((res) => {
+      setFoods(res.data)
+    })
+
+    await StoreService.getMenusByStoreId(id).then((res) => {
+      setMenus(res.data)
+    })
   }
 
   useEffect(() => {
@@ -128,18 +139,46 @@ const StoreDetail = (props) => {
             <TabContext value={value} >
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <TabList onChange={handleChange} aria-label="lab API tabs example" centered>
-                  <Tab label="Item One" value="1" />
-                  <Tab label="Item Two" value="2" />
-                  <Tab label="Item Three" value="3" />
+                  <Tab label="Foods" value="1" />
+                  <Tab label={`Review (2)`} value="2" />
+
                 </TabList>
               </Box>
-              <TabPanel value="1">Item One</TabPanel>
-              <TabPanel value="2">Item Two</TabPanel>
-              <TabPanel value="3">Item Three</TabPanel>
-            </TabContext>
+              <TabPanel value="1">
+                <div className="row">
+                  <div className="col-lg-2 border rounded pt-4" style={{ backgroundColor: '#f1f1f1', maxHeight: 250 }}>
+                    {menus?.map((menu) =>
+                      <p className="border-bottom" key={menu.id} style={{ cursor: 'pointer' }} onClick={() => { }}>{menu.name}</p>
+                    )}
+                  </div>
+                  <div className="col-lg-6">
+                    {foods?.map((food) =>
+                      <FoodCardv2 food={food} />
+                    )}
+                  </div>
+                  <div class="col-lg-4" >
+      
+                      <div class="checkout__order sticky-sm-top rounded" style={{ top: '2rem'}}>
+                        <h4>Your Order</h4>
+                        <ul>
+                          <li>Vegetable’s Package <span>$75.99</span></li>
+                          <li>Fresh Vegetable <span>$151.99</span></li>
+                          <li>Organic Bananas <span>$53.99</span></li>
+                        </ul>
+                        <div class="checkout__order__subtotal">Subtotal <span>$750.99</span></div>
+                        <div class="checkout__order__total">Total <span>$750.99</span></div>
+                        <button type="submit" class="site-btn">PLACE ORDER</button>
+                      </div>
+                    
+                  </div>
+                </div>
+              </TabPanel>
+              <TabPanel value="2">Reivews</TabPanel>
 
+            </TabContext>
+      
             <Banner />
-            <LatestStore title={'Other Store'}/>
+            <LatestStore title={'Other Store'} />
 
           </div>
         </div>

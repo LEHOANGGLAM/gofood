@@ -5,7 +5,7 @@ import StoreService from '../../services/StoreService';
 import queryString from 'query-string';
 import ReactPaginate from 'react-paginate';
 
-const MyStore = () => {
+const AdminStoreList = () => {
     useEffect(() => {
         document.title = "Store";
     }, []);
@@ -33,6 +33,11 @@ const MyStore = () => {
     const handlePageChange = ({ selected }) => {
         setPageNo({ selected });
     }
+
+    const handleView = (id) => {
+        navigate(`/admin/stores/${id}`);
+      }
+    
 
     return (
         <main>
@@ -68,7 +73,7 @@ const MyStore = () => {
                                     </td>
                                     <td>
                                         {/* <button type="button" class="btn btn-outline-success btn-sm mx-1"> <i class="bi bi-check-circle-fill mx-1"></i>Approve</button> */}
-                                        <button type="button" class="btn btn-outline-primary btn-sm mx-1" > <i class="bi bi-eye-fill me-1"></i>View</button>
+                                        <button type="button" class="btn btn-outline-primary btn-sm mx-1" onClick={()=>handleView(store.id)}> <i class="bi bi-eye-fill me-1"></i>View</button>
                                         <button type="button" class="btn btn-outline-danger btn-sm"> <i class="bi bi-lock-fill"></i>Lock</button>
                                     </td>
                                 </tr>
@@ -94,4 +99,4 @@ const MyStore = () => {
     );
 };
 
-export default MyStore;
+export default AdminStoreList;
