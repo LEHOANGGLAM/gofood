@@ -10,6 +10,14 @@ class StoreService {
     getStoreById(id) {
         return axios.get(`${API_BASE_URL}${id}/`);
     }
+
+    getFoodByStoreId(id) {
+        return axios.get(`${API_BASE_URL}${id}/foods/`);
+    }
+
+    getMenusByStoreId(id) {
+        return axios.get(`${API_BASE_URL}${id}/menus/`);
+    }
 }
 
 export default new StoreService();

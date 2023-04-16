@@ -65,6 +65,7 @@ class StoreViewSet(viewsets.ViewSet, generics.ListAPIView,
         keyword = request.GET.get('keyword', '')
         page = request.GET.get('pageNo', 1)
 
+        keyword = keyword.strip()
         queryset = self.queryset.filter(name__icontains=keyword)
         page = self.paginate_queryset(queryset)
 
@@ -100,6 +101,7 @@ class FoodViewSet(viewsets.ViewSet, generics.ListAPIView,
         price_to = request.GET.get('priceTo', None)
         category_id = request.GET.get('categoryId', None)
 
+        keyword = keyword.strip()
         queryset = self.queryset.filter(name__icontains=keyword)
 
         if price_from and price_to:
