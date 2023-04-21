@@ -41,9 +41,16 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'corsheaders',
+    'oauth2_provider',
 ]
 
 CKEDITOR_UPLOAD_PATH = "images/djangoapp/"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    )
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -135,3 +142,6 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CKEDITOR_UPLOAD_PATH = "ckeditor/djangoapp/"
+
+CLIENT_ID = 'L55xGHhQSW9wfvuFBCAI93RihTzPWYzUFRXCPkko'
+CLIENT_SECRET = 'QXXmwwKbO9kh0jl1nHoRyreNqtazTzlNUPmYc7pmqU5HCtvOvAr6KYraqqmuoFfHJ8AjqFighmCRP2ggM3yrEEFJFYVC4VER8VR7Ji1uDcMjieyfDAZ0SNWb3HTJkLHu'

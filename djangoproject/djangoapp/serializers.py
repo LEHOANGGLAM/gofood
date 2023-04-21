@@ -10,12 +10,13 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField()
+    image_path = serializers.SerializerMethodField(source='image')
 
-    def get_image(self, obj):
-        if obj.image:
-            request = self.context.get('request')
-            return request.build_absolute_uri('/static/%s' % obj.image.name) if request else ''
+    def get_image_path(self, obj):
+        request = self.context['request']
+        if obj.image and not obj.image.name.startswith("/static"):
+            path = '/static/%s' % obj.image.name
+        return request.build_absolute_uri(path)
 
 
 class FoodSerializer(ImageSerializer):
@@ -25,26 +26,23 @@ class FoodSerializer(ImageSerializer):
 
     class Meta:
         model = Food
-        fields = ['id', 'name', 'image', 'category_id', 'menu_id', 'store_id', 'created_date', 'price', 'description']
-
-    # def to_representation(self, obj):
-    #     image_url = obj.image.url.replace(settings.STATIC_URL, '/static/')
-    #     return {
-    #         'id': obj.id,
-    #         'name': obj.name,
-    #         'image': image_url,
-    #         'category_id': self.category_id,
-    #         'menu_id': self.menu_id,
-    #         'store_id': self.store_id,
-    #         'created_date': obj.created_date,
-    #         'price': obj.price
-    #     }
+        fields = ['id', 'name', 'image', 'image_path', 'category_id', 'menu_id', 'store_id', 'created_date', 'price',
+                  'description']
+        extra_kwargs = {
+            'image': {'write_only': 'True'},
+            'image_path': {'read_only': 'True'}
+        }
 
 
 class StoreSerializer(ImageSerializer):
     class Meta:
         model = Store
-        fields = ['id', 'name', 'address', 'phone', 'open_time', 'close_time', 'image', 'created_date', 'email']
+        fields = ['id', 'name', 'address', 'phone', 'open_time', 'close_time', 'image', 'image_path', 'created_date',
+                  'email']
+        extra_kwargs = {
+            'image': {'write_only': 'True'},
+            'image_path': {'read_only': 'True'}
+        }
 
 
 class MenuSerializer(serializers.ModelSerializer):
@@ -53,3 +51,29 @@ class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
         fields = ['id', 'name', 'store_id']
+
+
+class UserSerializer(serializers.ModelSerializer):
+    avatar_path = serializers.SerializerMethodField(source='avatar')
+
+    def get_avatar_path(self, obj):
+        if obj.avatar:
+            request = self.context['request']
+            if obj.avatar and not obj.avatar.name.startswith("/static"):
+                path = '/static/%s' % obj.avatar.name
+            return request.build_absolute_uri(path)
+
+    def create(self, validated_data):
+        data = validated_data.copy()
+        u = User(**data)
+        u.set_password(u.password)
+        u.save()
+        return u
+
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'username', 'password', 'avatar', 'avatar_path', 'email', 'role']
+        extra_kwargs = {
+            'avatar': {'write_only': 'True'},
+            'password': {'write_only': 'True'}
+        }

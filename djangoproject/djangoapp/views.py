@@ -4,7 +4,7 @@ from rest_framework.views import Response
 from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import render
 from .models import Food, User, Category, Store, Menu
-from .serializers import (FoodSerializer, CategorySerializer, StoreSerializer, MenuSerializer)
+from .serializers import (FoodSerializer, CategorySerializer, StoreSerializer, MenuSerializer, UserSerializer)
 from .paginators import FoodPaginator, StorePaginator
 
 
@@ -33,33 +33,33 @@ class MenuViewSet(viewsets.ViewSet, generics.ListAPIView,
         your_foreign_key = Store.objects.get(id=store_id)
         serializer.save(store=your_foreign_key)
 
-
     @action(methods=['get'], detail=True, url_path='foods')
     def foods(self, request, pk):
         c = self.get_object()
         foods = c.food_set.filter(active=True)
         return Response(MenuSerializer(foods, many=True, context={'request': request}).data)
 
+
 class StoreViewSet(viewsets.ViewSet, generics.ListAPIView,
                    generics.CreateAPIView,
                    generics.UpdateAPIView,
                    generics.DestroyAPIView,
                    generics.RetrieveAPIView):
-    queryset = Store.objects.all()
+    queryset = Store.objects.filter(is_active=True)
     serializer_class = StoreSerializer
     pagination_class = StorePaginator
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        image = serializer.validated_data.get('image', None)
-        if image:
-            instance = serializer.save(image=image)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        else:
-            return Response({'error': 'Image is required.'}, status=status.HTTP_400_BAD_REQUEST)
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #
+    #     image = serializer.validated_data.get('image', None)
+    #     if image:
+    #         instance = serializer.save(image=image)
+    #         headers = self.get_success_headers(serializer.data)
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    #     else:
+    #         return Response({'error': 'Image is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request, *args, **kwargs):
         keyword = request.GET.get('keyword', '')
@@ -131,3 +131,25 @@ class FoodViewSet(viewsets.ViewSet, generics.ListAPIView,
         serializer.save(menu=menu)
 
 
+class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, generics.RetrieveAPIView):
+    queryset = User.objects.filter(is_active=True)
+    serializer_class = UserSerializer
+    parser_classes = [parsers.MultiPartParser, ]
+
+    def get_permissions(self):
+        if self.action in ['current_user']:
+            return [permissions.IsAuthenticated()]
+        return [permissions.AllowAny()]
+
+    @action(methods=['get', 'put'], detail=False, url_path='current-user')
+    def current_user(self, request):
+        u = request.user
+        if request.method.__eq__('PUT'):
+            for k, v in request.data.items():
+                if k.__eq__('password'):
+                    u.set_password(k)
+                else:
+                    setattr(u, k, v)
+            u.save()
+
+        return Response(UserSerializer(u, context={'request': request}).data)

@@ -7,6 +7,7 @@ router.register('categories', views.CategoryViewSet)
 router.register('foods', views.FoodViewSet)
 router.register('stores', views.StoreViewSet)
 router.register('menus', views.MenuViewSet)
+router.register('users', views.UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
