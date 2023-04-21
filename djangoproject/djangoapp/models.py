@@ -4,6 +4,11 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     avatar = models.ImageField(upload_to='users/%Y/%m', null=True)
+    phone = models.CharField(unique=True, null=True, max_length=11)
+    role = models.CharField(max_length=45, default=None, null=True)
+
+    def __str__(self):
+        return self.username
 
 
 class BaseModel(models.Model):
