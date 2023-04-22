@@ -11,19 +11,20 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     image_path = serializers.SerializerMethodField(source='image')
-
     def get_image_path(self, obj):
-        request = self.context['request']
-        if obj.image and not obj.image.name.startswith("/static"):
-            path = '/static/%s' % obj.image.name
-        return request.build_absolute_uri(path)
+        if obj.image:
+            request = self.context.get('request')
+            if request is not None:
+                if obj.image and not obj.image.name.startswith("/static"):
+                    path = '/static/%s' % obj.image.name
+                    return request.build_absolute_uri(path)
+        return None
 
 
 class FoodSerializer(ImageSerializer):
     store_id = serializers.IntegerField()
     category_id = serializers.IntegerField()
     menu_id = serializers.IntegerField()
-    image_path = serializers.SerializerMethodField(source='image')
 
     class Meta:
         model = Food
@@ -31,18 +32,19 @@ class FoodSerializer(ImageSerializer):
                   'description']
         extra_kwargs = {
             'image': {'write_only': 'True'},
-            'image_path': {'read_only': 'True'}
+            'image_path': {'read_only': 'True'},
         }
 
 
 class StoreSerializer(ImageSerializer):
+
     class Meta:
         model = Store
-        fields = ['id', 'name', 'address', 'phone', 'open_time', 'close_time', 'image', 'image_path', 'created_date',
-                  'email']
+        fields = ['id', 'name', 'address', 'phone', 'open_time', 'close_time', 'image', 'image_path',
+                  'created_date', 'email', 'active']
         extra_kwargs = {
             'image': {'write_only': 'True'},
-            'image_path': {'read_only': 'True'}
+            'image_path': {'read_only': 'True'},
         }
 
 
@@ -59,10 +61,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_avatar_path(self, obj):
         if obj.avatar:
-            request = self.context['request']
-            if obj.avatar and not obj.avatar.name.startswith("/static"):
-                path = '/static/%s' % obj.avatar.name
-            return request.build_absolute_uri(path)
+            request = self.context.get('request')
+            if request is not None:
+                if obj.avatar and not obj.avatar.name.startswith("/static"):
+                    path = '/static/%s' % obj.avatar.name
+                    return request.build_absolute_uri(path)
+        return None
 
     def create(self, validated_data):
         data = validated_data.copy()

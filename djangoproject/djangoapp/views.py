@@ -45,21 +45,9 @@ class StoreViewSet(viewsets.ViewSet, generics.ListAPIView,
                    generics.UpdateAPIView,
                    generics.DestroyAPIView,
                    generics.RetrieveAPIView):
-    queryset = Store.objects.filter(is_active=True)
+    queryset = Store.objects.all()
     serializer_class = StoreSerializer
     pagination_class = StorePaginator
-
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #
-    #     image = serializer.validated_data.get('image', None)
-    #     if image:
-    #         instance = serializer.save(image=image)
-    #         headers = self.get_success_headers(serializer.data)
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    #     else:
-    #         return Response({'error': 'Image is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request, *args, **kwargs):
         keyword = request.GET.get('keyword', '')
@@ -69,8 +57,9 @@ class StoreViewSet(viewsets.ViewSet, generics.ListAPIView,
         queryset = self.queryset.filter(name__icontains=keyword)
         page = self.paginate_queryset(queryset)
 
-        serializer = self.serializer_class(page, many=True)
-        return self.get_paginated_response(serializer.data)
+        serializer = self.serializer_class(page, many=True, context={'request': request})
+        response_data = serializer.data
+        return self.get_paginated_response(response_data)
 
     @action(methods=['get'], detail=True, url_path='menus')
     def menus(self, request, pk):
@@ -100,24 +89,20 @@ class FoodViewSet(viewsets.ViewSet, generics.ListAPIView,
         price_from = request.GET.get('priceFrom', None)
         price_to = request.GET.get('priceTo', None)
         category_id = request.GET.get('categoryId', None)
-
         keyword = keyword.strip()
         queryset = self.queryset.filter(name__icontains=keyword)
-
         if price_from and price_to:
             queryset = queryset.filter(price__range=(price_from, price_to))
         elif price_from:
             queryset = queryset.filter(price__gte=price_from)
         elif price_to:
             queryset = queryset.filter(price__lte=price_to)
-
         if category_id is not None:
             queryset = queryset.filter(category_id=category_id)
-
         page = self.paginate_queryset(queryset)
-
-        serializer = self.serializer_class(page, many=True)
-        return self.get_paginated_response(serializer.data)
+        serializer = self.serializer_class(page, many=True, context={'request': request})
+        response_data = serializer.data
+        return self.get_paginated_response(response_data)
 
     def perform_create(self, serializer):
         store_id = serializer.validated_data.pop('store_id')
