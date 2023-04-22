@@ -23,6 +23,7 @@ class FoodSerializer(ImageSerializer):
     store_id = serializers.IntegerField()
     category_id = serializers.IntegerField()
     menu_id = serializers.IntegerField()
+    image_path = serializers.SerializerMethodField(source='image')
 
     class Meta:
         model = Food
