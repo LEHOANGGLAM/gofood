@@ -4,31 +4,28 @@ import { useNavigate } from "react-router-dom";
 import StoreService from '../../services/StoreService';
 import queryString from 'query-string';
 import ReactPaginate from 'react-paginate';
-import moment from "moment";
 
-const AdminStoreList = () => {
+const MyFoods = () => {
     useEffect(() => {
         document.title = "Store";
     }, []);
 
     const typingTimeOutRef = useRef(null);
     const navigate = useNavigate();
-    const [stores, setStores] = useState([]);
+    const [foods, setFoods] = useState([]);
     const [pageNo, setPageNo] = useState(1);
     const [storeCount, setStoreCount] = useState(0);
     const [search, setSearch] = useState('');
     const [totalPage, setTotalPage] = useState(1)
 
-    useEffect(() => {
-        const params = queryString.stringify({ keyword: search, pageNo: pageNo });
-        StoreService.getStoreWithFilter(params).then((res) => {
-            setStores(res.data.results);
-            setTotalPage(() => {
-                if (res.data.count % 12 === 0) return res.data.count / 12;
-                else return Math.floor(res.data.count / 12) + 1;
-            });
-            setStoreCount(res.data.count)
+    const getFoods = async () => {
+        await FoodService.getFoodByStoreId().then((res) => {
+
         });
+    }
+
+    useEffect(() => {
+        getFoods()
     }, [search, pageNo])
 
     const handlePageChange = ({ selected }) => {
@@ -36,7 +33,7 @@ const AdminStoreList = () => {
     }
 
     const handleView = (id) => {
-        navigate(`/admin/stores/${id}`);
+        navigate(`/storeadmin/stores/${id}`);
     }
 
     return (
@@ -44,33 +41,26 @@ const AdminStoreList = () => {
             <div class="table-data" style={{ minHeight: '600px' }}>
                 <div class="order">
                     <div class="head">
-                        <h3>Stores </h3>
+                        <h3>Foods </h3>
                         <i class="bi bi-search"></i>
                         <i class="bi bi-filter"></i>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Store Name</th>
-                                <th>Email</th>
-                                <th>Date Created</th>
-                                <th>Status</th>
+                                <th>Food Name</th>
+                           
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {stores?.map((store) =>
+                            {foods?.map((food) =>
                                 <tr>
                                     <td>
-
-                                        <img src={store.image_path ?? img} />
-                                        <p>{store.name}</p>
+                                        <img src={food.image ?? img} />
+                                        <p>{food.name}</p>
                                     </td>
-                                    <td>{store.email ?? 'No data'}</td>
-                                    <td>{moment(store.created_date).format('MM/DD/YYYY') ?? 'No data'}</td>
-                                    <td>
-                                        <span class={store.active ? `status success` : `status process`}>{store.active ? 'Approved' : 'Non-Active'}</span>
-                                    </td>
+                              
                                     <td>
                                         {/* <button type="button" class="btn btn-outline-success btn-sm mx-1"> <i class="bi bi-check-circle-fill mx-1"></i>Approve</button> */}
                                         <button type="button" class="btn btn-outline-primary btn-sm mx-1" onClick={() => handleView(store.id)}> <i class="bi bi-eye-fill me-1"></i>View</button>
@@ -99,4 +89,4 @@ const AdminStoreList = () => {
     );
 };
 
-export default AdminStoreList;
+export default MyFoods;

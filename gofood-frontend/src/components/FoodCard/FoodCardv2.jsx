@@ -11,19 +11,19 @@ const FoodCardv2 = ({ food }) => {
                     <div class="product__details__pic__item">
                         <img
                             class="product__details__pic__item--large"
-                            src={food.image ?? defaultimg}
-                            alt="store image"
+                            src={food.image_path ? food.image_path : defaultimg}
+                            alt="image"
                         />
                     </div>
                 </div>
             </div>
             <div class="col-lg-9 mt-3">
                 <h5 className='fw-bold'>
-                   {food.name}
+                    {food.name}
                 </h5>
-                <h5 className='mt-2 d-flex justify-content-between'>{formatPrice(food.price)} <i class="bi bi-plus-square-fill text-danger fs-2" style={{cursor: 'pointer'}} onClick={()=>{}}></i></h5>
+                <h5 className='mt-2 d-flex justify-content-between'>{formatPrice(food.price)} <i class="bi bi-plus-square-fill text-danger fs-2" style={{ cursor: 'pointer' }} onClick={() => { }}></i></h5>
                 <h6 className='text-secondary'>
-                   {food.description ?? 'No description'}
+                    {food.description ?? 'No description'}
                 </h6>
             </div>
         </div>

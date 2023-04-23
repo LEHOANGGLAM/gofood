@@ -35,7 +35,6 @@ const Foods = () => {
       });
       setProductCount(res.data.count)
     });
-
   }
 
   useEffect(() => {

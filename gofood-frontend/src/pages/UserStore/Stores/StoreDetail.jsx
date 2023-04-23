@@ -62,7 +62,7 @@ const StoreDetail = (props) => {
                 <div class="product__details__pic__item">
                   <img
                     class="product__details__pic__item--large"
-                    src={store.image ?? img}
+                    src={store.image_path ?? img}
                     alt="store image"
                   />
                 </div>

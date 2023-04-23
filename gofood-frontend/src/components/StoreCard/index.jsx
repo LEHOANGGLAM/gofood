@@ -7,7 +7,7 @@ const StoreCard = ({ store }) => {
         <div class="featured__item">
             <div
                 class="featured__item__pic set-bg"
-                style={store.image ? { backgroundImage: `url(${store.image})` } : { backgroundImage: `url(${defaultimg})` }}
+                style={store.image_path ? { backgroundImage: `url(${store.image_path})` } : { backgroundImage: `url(${defaultimg})` }}
             >
                 <ul class="featured__item__pic__hover">
                     <li>
