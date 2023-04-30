@@ -1,10 +1,11 @@
 from rest_framework import viewsets, generics, parsers, permissions, status
 from rest_framework.decorators import action
-from rest_framework.views import Response
+from rest_framework.views import Response, APIView
 from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import render
-from .models import Food, User, Category, Store, Menu
-from .serializers import (FoodSerializer, CategorySerializer, StoreSerializer, MenuSerializer, UserSerializer)
+from .models import Food, User, Category, Store, Menu, Order, OrderItem
+from .serializers import (FoodSerializer, CategorySerializer, StoreSerializer, MenuSerializer, UserSerializer,
+                          OrderSerializer)
 from .paginators import FoodPaginator, StorePaginator
 
 
@@ -45,18 +46,16 @@ class StoreViewSet(viewsets.ViewSet, generics.ListAPIView,
                    generics.UpdateAPIView,
                    generics.DestroyAPIView,
                    generics.RetrieveAPIView):
-    queryset = Store.objects.all()
+    queryset = Store.objects.filter(active=True)
     serializer_class = StoreSerializer
     pagination_class = StorePaginator
 
     def list(self, request, *args, **kwargs):
         keyword = request.GET.get('keyword', '')
         page = request.GET.get('pageNo', 1)
-
         keyword = keyword.strip()
         queryset = self.queryset.filter(name__icontains=keyword)
         page = self.paginate_queryset(queryset)
-
         serializer = self.serializer_class(page, many=True, context={'request': request})
         response_data = serializer.data
         return self.get_paginated_response(response_data)
@@ -72,6 +71,41 @@ class StoreViewSet(viewsets.ViewSet, generics.ListAPIView,
         c = self.get_object()
         foods = c.food_set.filter(active=True)
         return Response(FoodSerializer(foods, many=True, context={'request': request}).data)
+
+class OrderViewSet(viewsets.ViewSet,
+                   generics.CreateAPIView):
+    queryset = Order.objects.filter(active=True)
+    serializer_class = OrderSerializer
+
+    def create(self, request):
+        order_items = request.data['items']
+        user = request.user
+        order = Order.objects.create(user=user)
+        for item in order_items:
+            food_id = item['food']
+            quantity = item['quantity']
+            food = Food.objects.get(id=food_id)
+            order_item = OrderItem.objects.create(food=food, quantity=quantity)
+            order.items.add(order_item)
+        order.save()
+        serializer = self.get_serializer(order)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class StoreActiveView(generics.UpdateAPIView):
+    serializer_class = StoreSerializer
+    queryset = Store.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        store = self.get_object()
+        if store.active:
+            store.active = False
+        else:
+            store.active = True
+        store.save()
+        serializer = self.serializer_class(store)
+        return Response(serializer.data)
 
 
 class FoodViewSet(viewsets.ViewSet, generics.ListAPIView,
@@ -114,6 +148,9 @@ class FoodViewSet(viewsets.ViewSet, generics.ListAPIView,
         serializer.save(store=store)
         serializer.save(category=category)
         serializer.save(menu=menu)
+
+
+
 
 
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, generics.RetrieveAPIView):
