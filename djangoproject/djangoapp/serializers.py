@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.conf import settings
-from .models import User, Food, Category, Store, Menu
+from .models import User, Food, Category, Store, Menu, Order, OrderItem
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -11,6 +11,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     image_path = serializers.SerializerMethodField(source='image')
+
     def get_image_path(self, obj):
         if obj.image:
             request = self.context.get('request')
@@ -37,7 +38,6 @@ class FoodSerializer(ImageSerializer):
 
 
 class StoreSerializer(ImageSerializer):
-
     class Meta:
         model = Store
         fields = ['id', 'name', 'address', 'phone', 'open_time', 'close_time', 'image', 'image_path',
@@ -54,6 +54,20 @@ class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
         fields = ['id', 'name', 'store_id']
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['id', 'quantity', 'order', 'food', 'created_date']
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = ['id', 'items', 'user', 'payment_date', 'total_price', 'created_date']
 
 
 class UserSerializer(serializers.ModelSerializer):

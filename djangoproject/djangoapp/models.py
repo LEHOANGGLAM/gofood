@@ -28,7 +28,10 @@ class Category(models.Model):
         return self.name
 
 
-class Store(BaseModel):
+class Store(models.Model):
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=False)
     name = models.CharField(max_length=200)
     address = models.CharField(max_length=200)
     description = models.TextField()
@@ -36,7 +39,6 @@ class Store(BaseModel):
     open_time = models.TimeField()
     close_time = models.TimeField()
     image = models.ImageField(upload_to='stores/%Y/%m', null=True)
-    is_active = models.BooleanField(default=False)
     email = models.EmailField(unique=True, null=True, blank=True, default=None)
 
     def __str__(self):
@@ -64,6 +66,34 @@ class Food(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class Order(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    payment_date = models.DateTimeField(blank=True, null=True)
+    total_price = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'
+        ordering = ('-created_date',)
+
+    def __str__(self):
+        return f'{self.user.name}\'s order ({self.id})'
+
+
+class OrderItem(BaseModel):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', null=True)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+
+    class Meta:
+        verbose_name = 'Order item'
+        verbose_name_plural = 'Order items'
+        ordering = ('-created_date',)
+
+    def __str__(self):
+        return f'{self.quantity} of {self.food.name}'
 
 
 class ActionBase(BaseModel):
