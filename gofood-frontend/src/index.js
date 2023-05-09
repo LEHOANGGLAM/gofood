@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "./assets/sass/style.scss";
 import "./assets/css/slicknav.min.css";
 import "./assets/css/nice-select.css";
@@ -21,7 +21,8 @@ import Wrapper from "./layouts/Wrapper";
 import Foods from "./pages/UserStore/Foods";
 import AdminStoreList from "./pages/Admin/AdminStoreList";
 import AdminStoreDetail from "./pages/Admin/AdminStoreDetail";
-
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -30,12 +31,7 @@ root.render(
       <Wrapper>
         <Routes>
           {/* UserStore */}
-          <Route
-            path="/"
-            element={
-              <Store />
-            }
-          >
+          <Route path="/" element={<Store />}>
             <Route index element={<Home />} />
             <Route path="/stores" element={<Stores />} />
             <Route path="/stores/:id" element={<StoreDetail />} />
@@ -44,29 +40,20 @@ root.render(
           </Route>
 
           {/* Admin */}
-          <Route
-            path="/admin"
-            element={
-              <Admin />
-            }
-          >
+          <Route path="/admin" element={<Admin />}>
             <Route index element={<Dashboard />} />
             <Route path="/admin/stores" element={<AdminStoreList />} />
             <Route path="/admin/stores/:id" element={<AdminStoreDetail />} />
-
           </Route>
 
           {/* Store-Admin */}
-          <Route
-            path="/store-admin"
-            element={
-              <Admin />
-            }
-          >
+          <Route path="/store-admin" element={<Admin />}>
             <Route index element={<Dashboard />} />
-
           </Route>
-          <Route path="*" element={<NotFound />}> </Route>
+
+          <Route path="/signup" element={<SignUp />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </Wrapper>
     </BrowserRouter>
