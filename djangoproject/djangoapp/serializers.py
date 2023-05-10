@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.conf import settings
-from .models import User, Food, Category, Store, Menu, Order, OrderItem
+from .models import User, Food, Category, Store, Menu, Order, OrderItem, Comment
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -70,6 +70,26 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = ['id', 'items', 'user', 'payment_date', 'total_price', 'created_date']
 
 
+class AuthorizedStoreSerializer(StoreSerializer):
+    liked = serializers.SerializerMethodField()
+    rate = serializers.SerializerMethodField()
+
+    def get_liked(self, store):
+        request = self.context.get('request')
+        if request:
+            return store.like_set.filter(user=request.user, liked=True).exists()
+
+    def get_rate(self, store):
+        request = self.context.get('request')
+        if request:
+            r = store.rating_set.filter(user=request.user).first()
+            return r.rate if r else 0
+
+    class Meta:
+        model = Store
+        fields = StoreSerializer.Meta.fields + ['liked', 'rate']
+
+
 class UserSerializer(serializers.ModelSerializer):
     avatar_path = serializers.SerializerMethodField(source='avatar')
 
@@ -96,3 +116,11 @@ class UserSerializer(serializers.ModelSerializer):
             'avatar': {'write_only': 'True'},
             'password': {'write_only': 'True'}
         }
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'content', 'created_date', 'user']
