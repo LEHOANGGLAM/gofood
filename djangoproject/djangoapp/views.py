@@ -3,10 +3,11 @@ from rest_framework.decorators import action
 from rest_framework.views import Response, APIView
 from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import render
-from .models import Food, User, Category, Store, Menu, Order, OrderItem
+from .models import Food, User, Category, Store, Menu, Order, OrderItem, Comment, Like, Rating
 from .serializers import (FoodSerializer, CategorySerializer, StoreSerializer, MenuSerializer, UserSerializer,
-                          OrderSerializer)
+                          OrderSerializer, CommentSerializer, AuthorizedStoreSerializer)
 from .paginators import FoodPaginator, StorePaginator
+from .perms import CommentOwner
 
 
 # Create your views here.
@@ -50,6 +51,11 @@ class StoreViewSet(viewsets.ViewSet, generics.ListAPIView,
     serializer_class = StoreSerializer
     pagination_class = StorePaginator
 
+    def get_serializer_class(self):
+        if self.request.user.is_authenticated:
+            return AuthorizedStoreSerializer
+        return self.serializer_class
+
     def list(self, request, *args, **kwargs):
         keyword = request.GET.get('keyword', '')
         page = request.GET.get('pageNo', 1)
@@ -72,6 +78,29 @@ class StoreViewSet(viewsets.ViewSet, generics.ListAPIView,
         foods = c.food_set.filter(active=True)
         return Response(FoodSerializer(foods, many=True, context={'request': request}).data)
 
+    @action(methods=['post'], detail=True, url_path='comments')
+    def comments(self, request, pk):
+        c = Comment(content=request.data['content'], lesson=self.get_object(), user=request.user)
+        c.save()
+        return Response(CommentSerializer(c, context={'request': request}).data, status=status.HTTP_201_CREATED)
+
+    @action(methods=['post'], detail=True, url_path='like')
+    def like(self, request, pk):
+        l, created = Like.objects.get_or_create(lesson=self.get_object(), user=request.user)
+        if not created:
+            l.liked = not l.liked
+        l.save()
+
+        return Response(status=status.HTTP_200_OK)
+
+    @action(methods=['post'], detail=True, url_path='rating')
+    def rating(self, request, pk):
+        r, _ = Rating.objects.get_or_create(lesson=self.get_object(), user=request.user)
+        r.rate = request.data['rating']
+        r.save()
+
+        return Response(status=status.HTTP_200_OK)
+
 class OrderViewSet(viewsets.ViewSet,
                    generics.CreateAPIView):
     queryset = Order.objects.filter(active=True)
@@ -81,12 +110,14 @@ class OrderViewSet(viewsets.ViewSet,
         order_items = request.data['items']
         user = request.user
         order = Order.objects.create(user=user)
+        total_price = 0
         for item in order_items:
             food_id = item['food']
             quantity = item['quantity']
             food = Food.objects.get(id=food_id)
             order_item = OrderItem.objects.create(food=food, quantity=quantity)
             order.items.add(order_item)
+            order.total_price += quantity * food.price
         order.save()
         serializer = self.get_serializer(order)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -150,9 +181,6 @@ class FoodViewSet(viewsets.ViewSet, generics.ListAPIView,
         serializer.save(menu=menu)
 
 
-
-
-
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = User.objects.filter(is_active=True)
     serializer_class = UserSerializer
@@ -175,3 +203,9 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView
             u.save()
 
         return Response(UserSerializer(u, context={'request': request}).data)
+
+
+class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateAPIView):
+    queryset = Comment.objects.filter(active=True)
+    serializer_class = CommentSerializer
+    permission_classes = [CommentOwner, ]
