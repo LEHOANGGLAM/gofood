@@ -46,8 +46,13 @@ const AdminStoreDetail = () => {
 
     const handleApprove = () => {
         handleOpen()
-        // StoreService.approveStore(id).then((res) => {
-        // })
+        StoreService.approveStore(id).then((res) => {
+            console.log(res.data);
+        })
+    }
+
+    const handleCancel = () => {
+        navigate(`/admin/stores`);
     }
 
     useEffect(() => {
@@ -94,7 +99,7 @@ const AdminStoreDetail = () => {
                     </div>
                     <div className="d-flex justify-content-center gap-2">
                         <button type="button" class="btn btn-outline-success btn-sm mx-1" onClick={() => { handleApprove() }}> <i class="bi bi-check me-1"></i>Approve</button>
-                        <button type="button" class="btn btn-outline-danger btn-sm"> Cancel</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" onClick={() => { handleCancel() }}> Cancel</button>
                     </div>
                 </div>
             </div>
@@ -110,8 +115,8 @@ const AdminStoreDetail = () => {
                     </Typography>
                     <Typography id="modal-modal-description" className="text-success text-center">
                         <i class="bi bi-check-circle-fill fs-2"></i>   Approved successfully
-                
-                        <button type="button" class="btn btn-outline-success btn-sm fs-2"> Back   </button>
+
+                        <button type="button" class="btn btn-outline-success btn-sm fs-2"  onClick={() => { handleCancel() }}> Back   </button>
                     </Typography>
                 </Box>
             </Modal>
