@@ -18,6 +18,10 @@ class StoreService {
     getMenusByStoreId(id) {
         return axios.get(`${API_BASE_URL}${id}/menus/`);
     }
+
+    approveStore(id) {
+        return axios.patch(`${API_BASE_URL}${id}/active/`);
+    }
 }
 
 export default new StoreService();
